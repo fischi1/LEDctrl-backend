@@ -25,4 +25,4 @@ RUN chown -R appuser:appuser /app
 
 USER appuser
 
-#CMD [ "node", "." ]
+CMD [ "node", "." ]
