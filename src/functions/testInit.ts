@@ -9,23 +9,23 @@ async function testInit(port: number, host: string) {
         setup(101, 255)
 
         setColor("ff0000")
-        render()
+        await render()
 
         await sleep(500)
 
         setBrightness(30)
         setColor("00ff00")
-        render()
+        await render()
 
         await sleep(500)
 
         setBrightness(2)
         setColor("0000ff")
-        render()
+        await render()
 
         await sleep(500)
 
-        clear()
+        await clear()
 
         disconnect()
     } catch(err) {

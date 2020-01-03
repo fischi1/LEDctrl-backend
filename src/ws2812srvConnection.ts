@@ -2,6 +2,8 @@ import net from "net";
 
 var client : net.Socket | null = null;
 
+let commands: string[] = []
+
 function connect(port: number, host: string) {
     client = new net.Socket();
 
@@ -43,7 +45,22 @@ function isConnected() {
 }
 
 function writeCommand(command = "") {
-    client?.write(command + "\n")
+    commands.push(command + "\n")
 }
 
-export { connect, disconnect, isConnected, writeCommand };
+function sendBufferedCommands() {
+    return new Promise((resolve, reject) => {
+        
+        client?.write(commands.join(""), err => {
+            
+            commands = []
+
+            if(!!err)
+                reject(err)
+            else 
+                resolve()
+        })
+    })
+}
+
+export { connect, disconnect, isConnected, sendBufferedCommands, writeCommand };

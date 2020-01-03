@@ -1,12 +1,15 @@
-import { writeCommand } from "../ws2812srvConnection"
+import { writeCommand, sendBufferedCommands } from "../ws2812srvConnection"
+
+const BLANK_COLOR = "000000"
 
 function setup(ledAmount: number, brightness: number) {
     writeCommand(`setup 1,${ledAmount},3,0,${brightness}`)
     writeCommand("init")
 }
 
-function render() {
+async function render() {
     writeCommand("render")
+    await sendBufferedCommands()
 }
 
 function setColor(color: string) {
@@ -21,9 +24,9 @@ function setBrightness(val: number) {
     writeCommand(`brightness 1,${val}`)
 }
 
-function clear() {
-    setColor("000000")
-    render()
+async function clear() {
+    setColor(BLANK_COLOR)
+    await render()
 }
 
-export { setup, render, setColor, setColorAtPos, setBrightness, clear }
+export { BLANK_COLOR, setup, render, setColor, setColorAtPos, setBrightness, clear }
