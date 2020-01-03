@@ -1,4 +1,4 @@
-import sleep from "./sleep"
+import sleep from "./functions/sleep"
 
 let running = true
 let color = "000000"
