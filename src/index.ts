@@ -1,9 +1,7 @@
 import bodyParser from 'body-parser'
 import express, { Application, Request, Response } from 'express'
 import { getRunning, setRunning } from './colorLoop'
-import { clear, render, setup, setColor, setBrightness } from './functions/ledCommands'
-import sleep from './functions/sleep'
-import { connect, disconnect } from './ws2812srvConnection'
+import testInit from './functions/testInit'
 
 const LED_HOST = process.env.LED_HOST ?? "192.168.0.212"
 const LED_PORT = process.env.LED_PORT ? +process.env.LED_PORT : 9999
@@ -43,37 +41,4 @@ app.listen(PORT,() => {
 
 //run()
 
-async function testInit() {
-    try {
-        await connect(LED_PORT, LED_HOST)
-
-        setup(101, 255)
-
-        setColor("ff0000")
-        render()
-
-        await sleep(500)
-
-        setBrightness(30)
-        setColor("00ff00")
-        render()
-
-        await sleep(500)
-
-        setBrightness(2)
-        setColor("0000ff")
-        render()
-
-        await sleep(500)
-
-        clear()
-
-        disconnect()
-    } catch(err) {
-        console.error(err)
-    }
-
-    process.exit(0)
-}
-
-testInit()
+testInit(LED_PORT, LED_HOST)
