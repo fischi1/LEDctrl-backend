@@ -17,9 +17,13 @@ function setColorAtPos(color: string, pos: number) {
     writeCommand(`fill 1,${color},${pos},1`)
 }
 
+function setBrightness(val: number) {
+    writeCommand(`brightness 1,${val}`)
+}
+
 function clear() {
     setColor("000000")
     render()
 }
 
-export { setup, render, setColor, setColorAtPos, clear }
+export { setup, render, setColor, setColorAtPos, setBrightness, clear }

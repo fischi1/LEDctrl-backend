@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser'
 import express, { Application, Request, Response } from 'express'
 import { getRunning, setRunning } from './colorLoop'
-import { clear, render, setup, setColor } from './functions/ledCommands'
+import { clear, render, setup, setColor, setBrightness } from './functions/ledCommands'
 import sleep from './functions/sleep'
 import { connect, disconnect } from './ws2812srvConnection'
 
@@ -47,18 +47,20 @@ async function testInit() {
     try {
         await connect(LED_PORT, LED_HOST)
 
-        setup(101, 15)
+        setup(101, 255)
 
         setColor("ff0000")
         render()
 
         await sleep(500)
 
+        setBrightness(30)
         setColor("00ff00")
         render()
 
         await sleep(500)
 
+        setBrightness(2)
         setColor("0000ff")
         render()
 
