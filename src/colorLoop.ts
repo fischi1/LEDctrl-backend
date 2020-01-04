@@ -1,9 +1,6 @@
 import sleep from "./functions/sleep"
 import { setColorAtPos, BLANK_COLOR, render } from "./functions/ledCommands"
-
-const LED_AMOUNT = process.env.LED_AMOUNT ? +process.env.LED_AMOUNT : 101
-
-const EFFECT_WIDTH = 20
+import environment from "./environment"
 
 let running = true
 let currentColor = "FFFFFF"
@@ -28,28 +25,28 @@ let dir = true
 async function startColorLoop() {
     while(running) {
 
-        for(let i = 0; i < LED_AMOUNT; i++) {
+        for(let i = 0; i < environment.LED_AMOUNT; i++) {
             determineColor(pos, i, dir)
         }
 
         pos++
         
-        if(pos >= LED_AMOUNT) {
+        if(pos >= environment.LED_AMOUNT) {
             pos = 0
             dir = !dir
         }
 
         await render()
 
-        await sleep(10)
+        await sleep(environment.LOOP_INTERVAL_MS)
     }
 }
 
 function determineColor(curpos: number, ledIndex: number, dir: boolean) {
-    if(Math.abs(curpos-ledIndex) < EFFECT_WIDTH)
-        setColorAtPos(currentColor, dir ? ledIndex : (LED_AMOUNT - 1) - ledIndex)
+    if(Math.abs(curpos-ledIndex) < environment.COLOR_LOOP_WIDTH)
+        setColorAtPos(currentColor, dir ? ledIndex : (environment.LED_AMOUNT - 1) - ledIndex)
     else
-        setColorAtPos(BLANK_COLOR, dir ? ledIndex : (LED_AMOUNT - 1) - ledIndex)
+        setColorAtPos(BLANK_COLOR, dir ? ledIndex : (environment.LED_AMOUNT - 1) - ledIndex)
 }
 
 export { getRunning, setRunning, setCurrentColor, startColorLoop }

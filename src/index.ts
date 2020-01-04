@@ -3,21 +3,15 @@ import express, { Application, Request, Response } from 'express'
 import { getRunning, setCurrentColor, setRunning, startColorLoop } from './colorLoop'
 import { setup } from './functions/ledCommands'
 import { connect } from './ws2812srvConnection'
-
-const LED_HOST = process.env.LED_HOST ?? "192.168.0.212"
-const LED_PORT = process.env.LED_PORT ? +process.env.LED_PORT : 9999
-const PORT = process.env.PORT ?? 3000
-const LED_AMOUNT = process.env.LED_AMOUNT ? +process.env.LED_AMOUNT : 101
-
-const BRIGHTNESS = 5
+import environment from './environment'
 
 const app : Application = express()
 
 async function init() {
     try {
-        await connect(LED_PORT, LED_HOST)
+        await connect(environment.LED_PORT, environment.LED_HOST)
 
-        setup(LED_AMOUNT, BRIGHTNESS)
+        setup(environment.LED_AMOUNT, environment.BRIGHTNESS)
 
         startColorLoop()
     } catch(err) {
@@ -48,8 +42,8 @@ async function init() {
     )
 
 
-    app.listen(PORT,() => {
-        console.log(`server is running on PORT ${PORT}`)
+    app.listen(environment.PORT,() => {
+        console.log(`server is running on PORT ${environment.PORT}`)
     })
 }
 
