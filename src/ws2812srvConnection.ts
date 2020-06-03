@@ -1,30 +1,30 @@
-import net from "net";
+import net from "net"
 
-var client : net.Socket | null = null;
+var client: net.Socket | null = null
 
 let commands: string[] = []
 
 function connect(port: number, host: string) {
-    client = new net.Socket();
+    client = new net.Socket()
 
     return new Promise((resolve, reject) => {
-        if(client) {
-            client.connect({ port: port, host: host }, function() {        
-                console.log('TCP connection established with the server.')
+        if (client) {
+            client.connect({ port: port, host: host }, function () {
+                console.log("TCP connection established with the server.")
                 resolve()
-            });
-        
-            client.on('end', () => {
+            })
+
+            client.on("end", () => {
                 client = null
-                console.log('tcp connection ended');
-            });
-    
-            client.on("error", err => {
+                console.log("tcp connection ended")
+            })
+
+            client.on("error", (err) => {
                 client = null
-                reject(err);
+                reject(err)
             })
             client.on("timeout", () => {
-                client = null;
+                client = null
                 reject("timeout")
             })
         }
@@ -34,14 +34,14 @@ function connect(port: number, host: string) {
 function disconnect() {
     try {
         client?.destroy()
-    } catch(err) {
-        console.error(err);
+    } catch (err) {
+        console.error(err)
     }
-    client = null;
+    client = null
 }
 
 function isConnected() {
-    return !!client;
+    return !!client
 }
 
 function writeCommand(command = "") {
@@ -50,17 +50,13 @@ function writeCommand(command = "") {
 
 function sendBufferedCommands() {
     return new Promise((resolve, reject) => {
-        
-        client?.write(commands.join(""), err => {
-            
+        client?.write(commands.join(""), (err) => {
             commands = []
 
-            if(!!err)
-                reject(err)
-            else 
-                resolve()
+            if (!!err) reject(err)
+            else resolve()
         })
     })
 }
 
-export { connect, disconnect, isConnected, sendBufferedCommands, writeCommand };
+export { connect, disconnect, isConnected, sendBufferedCommands, writeCommand }

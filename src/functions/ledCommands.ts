@@ -29,4 +29,12 @@ async function clear() {
     await render()
 }
 
-export { BLANK_COLOR, setup, render, setColor, setColorAtPos, setBrightness, clear }
+export {
+    BLANK_COLOR,
+    setup,
+    render,
+    setColor,
+    setColorAtPos,
+    setBrightness,
+    clear
+}

@@ -28,7 +28,7 @@ async function testInit(port: number, host: string) {
         await clear()
 
         disconnect()
-    } catch(err) {
+    } catch (err) {
         console.error(err)
     }
 

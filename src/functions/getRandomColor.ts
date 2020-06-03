@@ -1,11 +1,11 @@
-function getRandomColor() {   
-    const letters = '0123456789ABCDEF';
-    let color = '';
+function getRandomColor() {
+    const letters = "0123456789ABCDEF"
+    let color = ""
 
     for (let i = 0; i < 6; i++)
-        color += letters[Math.floor(Math.random() * letters.length)];
-    
-    return color;
+        color += letters[Math.floor(Math.random() * letters.length)]
+
+    return color
 }
 
-export default getRandomColor;
+export default getRandomColor
