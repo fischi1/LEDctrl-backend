@@ -1,56 +1,67 @@
 import sleep from "./functions/sleep"
-import { setColorAtPos, BLANK_COLOR, render } from "./functions/ledCommands"
+import {
+    setColorAtPos,
+    BLANK_COLOR,
+    renderBuffer,
+    setColor,
+    clear
+} from "./functions/ledCommands"
 import environment from "./environment"
+import { Time } from "./types/Time"
 
 let running = true
-let currentColor = "FFFFFF"
 
-function getRunning() {
-    return running
+const setRunning = (val: boolean) => (running = val)
+
+const getRunning = () => running
+
+const diffTime = (a: number[], b: number[]): number[] => {
+    return [a[0] - b[0], a[1] - b[1]]
 }
 
-function setRunning(val: boolean) {
-    running = val
-    if (running) startColorLoop()
+const convertToS = (hrtime: number[]) => {
+    return hrtime[0] + hrtime[1] / 1000000000
 }
 
-function setCurrentColor(val: string) {
-    currentColor = val
-}
-
-let pos = 0
-let dir = true
-
-async function startColorLoop() {
-    while (running) {
-        for (let i = 0; i < environment.LED_AMOUNT; i++) {
-            determineColor(pos, i, dir)
-        }
-
-        pos++
-
-        if (pos >= environment.LED_AMOUNT) {
-            pos = 0
-            dir = !dir
-        }
-
-        await render()
-
-        await sleep(environment.LOOP_INTERVAL_MS)
+const calculateTime = (
+    startTime: number[],
+    lastTime: number[],
+    newTime: number[]
+): Time => {
+    return {
+        time: convertToS(diffTime(newTime, startTime)),
+        deltaTime: convertToS(diffTime(newTime, lastTime))
     }
 }
 
-function determineColor(curpos: number, ledIndex: number, dir: boolean) {
-    if (Math.abs(curpos - ledIndex) < environment.COLOR_LOOP_WIDTH)
-        setColorAtPos(
-            currentColor,
-            dir ? ledIndex : environment.LED_AMOUNT - 1 - ledIndex
-        )
-    else
-        setColorAtPos(
-            BLANK_COLOR,
-            dir ? ledIndex : environment.LED_AMOUNT - 1 - ledIndex
-        )
+async function startLoop() {
+    const startTime = process.hrtime()
+    let lastTime = startTime
+    while (running) {
+        const newTime = process.hrtime()
+
+        clear()
+        render(calculateTime(startTime, lastTime, newTime))
+
+        await renderBuffer()
+        await sleep(environment.LOOP_INTERVAL_MS)
+
+        lastTime = newTime
+    }
 }
 
-export { getRunning, setRunning, setCurrentColor, startColorLoop }
+let timer = 0
+let pos = 0
+
+const render = (time: Time) => {
+    timer += time.deltaTime
+
+    // setColorAtPos("ffffff", 100)
+
+    if (timer > 0.025) {
+        timer = 0
+        setColorAtPos("ffffff", (pos++) % environment.LED_AMOUNT)
+    }
+}
+
+export { startLoop, setRunning, getRunning }

@@ -1,14 +1,10 @@
 import bodyParser from "body-parser"
 import express, { Application, Request, Response } from "express"
-import {
-    getRunning,
-    setCurrentColor,
-    setRunning,
-    startColorLoop
-} from "./colorLoop"
+import environment from "./environment"
 import { setup } from "./functions/ledCommands"
 import { connect } from "./ws2812srvConnection"
-import environment from "./environment"
+import { startLoop, setRunning, getRunning } from "./colorLoop"
+import { Preset } from "./types/Preset"
 
 const app: Application = express()
 
@@ -18,7 +14,7 @@ async function init() {
 
         setup(environment.LED_AMOUNT, environment.BRIGHTNESS)
 
-        startColorLoop()
+        startLoop()
     } catch (err) {
         console.error(err)
         process.exit(1)
@@ -26,19 +22,15 @@ async function init() {
 
     app.use(bodyParser.json())
 
-    app.get("/toggle", (req, res) => {
+    app.post("/toggle", (req, res) => {
         setRunning(!getRunning())
 
         res.status(200).send({ running: getRunning() })
     })
 
     app.post("/set", (req: Request, res: Response) => {
-        let color = req.body.color as string
-
-        if (color.startsWith("#")) color = color.replace("#", "")
-
-        setCurrentColor(color)
-
+        const preset = req.body as Preset
+        
         res.status(200).send({ message: "ok" })
     })
 
