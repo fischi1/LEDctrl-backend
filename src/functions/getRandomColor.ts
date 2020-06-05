@@ -1,4 +1,14 @@
-function getRandomColor() {
+import { Color } from "../types/Color"
+
+function getRandomColor(): Color {
+    return {
+        r: Math.random(),
+        g: Math.random(),
+        b: Math.random()
+    }
+}
+
+function getRandomColorStr() {
     const letters = "0123456789ABCDEF"
     let color = ""
 
@@ -8,4 +18,4 @@ function getRandomColor() {
     return color
 }
 
-export default getRandomColor
+export { getRandomColor, getRandomColorStr }

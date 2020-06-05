@@ -1,4 +1,6 @@
+import { Color } from "../types/Color"
 import { sendBufferedCommands, writeCommand } from "../ws2812srvConnection"
+import convertColorToString from "./convertColor"
 
 const BLANK_COLOR = "000000"
 
@@ -12,11 +14,19 @@ async function renderBuffer() {
     await sendBufferedCommands()
 }
 
-function setColor(color: string) {
+function setColor(color: Color) {
+    setColorStr(convertColorToString(color))
+}
+
+function setColorStr(color: string) {
     writeCommand(`fill 1,${color}`)
 }
 
-function setColorAtPos(color: string, pos: number) {
+function setColorAtPos(color: Color, pos: number) {
+    setColorAtPosStr(convertColorToString(color), pos)
+}
+
+function setColorAtPosStr(color: string, pos: number) {
     writeCommand(`fill 1,${color},${pos},1`)
 }
 
@@ -25,11 +35,11 @@ function setBrightness(val: number) {
 }
 
 function clear() {
-    setColor(BLANK_COLOR)
+    setColorStr(BLANK_COLOR)
 }
 
 async function clearAndFlush() {
-    setColor(BLANK_COLOR)
+    setColorStr(BLANK_COLOR)
     await renderBuffer()
 }
 
@@ -38,7 +48,9 @@ export {
     setup,
     renderBuffer,
     setColor,
+    setColorStr,
     setColorAtPos,
+    setColorAtPosStr,
     setBrightness,
     clear,
     clearAndFlush

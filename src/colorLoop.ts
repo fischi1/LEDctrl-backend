@@ -1,13 +1,10 @@
-import sleep from "./functions/sleep"
-import {
-    setColorAtPos,
-    BLANK_COLOR,
-    renderBuffer,
-    setColor,
-    clear
-} from "./functions/ledCommands"
 import environment from "./environment"
+import { clear, renderBuffer, setColorAtPos } from "./functions/ledCommands"
+import sleep from "./functions/sleep"
+import { Color } from "./types/Color"
 import { Time } from "./types/Time"
+import convertColorToString from "./functions/convertColor"
+import { multiplyScalar } from "./functions/colorHelpers"
 
 let running = true
 
@@ -51,16 +48,36 @@ async function startLoop() {
 }
 
 let timer = 0
-let pos = 0
+const transTime = 5
+
+const color: Color = {
+    r: 1,
+    g: 0,
+    b: 0
+}
+
+function normFunc(val: number, maxDistance: number): number {
+    if (val > maxDistance) return 0
+
+    const relativeDistance = 1 - val / maxDistance
+
+    return Math.pow(relativeDistance, 5)
+}
 
 const render = (time: Time) => {
     timer += time.deltaTime
 
-    // setColorAtPos("ffffff", 100)
-
-    if (timer > 0.025) {
+    if (timer > transTime) {
         timer = 0
-        setColorAtPos("ffffff", (pos++) % environment.LED_AMOUNT)
+    }
+
+    const pos = (timer / transTime) * environment.LED_AMOUNT
+    // const pos = 50
+
+    for (let i = 0; i < environment.LED_AMOUNT; i++) {
+        const relativeDistance = Math.abs(i - pos)
+
+        setColorAtPos(multiplyScalar(color, normFunc(relativeDistance, 5)), i)
     }
 }
 

@@ -1,5 +1,5 @@
 import { connect, disconnect } from "../ws2812srvConnection"
-import { setup, setColor, render, setBrightness, clear } from "./ledCommands"
+import { clear, renderBuffer, setBrightness, setColorStr, setup } from "./ledCommands"
 import sleep from "./sleep"
 
 async function testInit(port: number, host: string) {
@@ -8,20 +8,20 @@ async function testInit(port: number, host: string) {
 
         setup(101, 255)
 
-        setColor("ff0000")
-        await render()
+        setColorStr("ff0000")
+        await renderBuffer()
 
         await sleep(500)
 
         setBrightness(30)
-        setColor("00ff00")
-        await render()
+        setColorStr("00ff00")
+        await renderBuffer()
 
         await sleep(500)
 
         setBrightness(2)
-        setColor("0000ff")
-        await render()
+        setColorStr("0000ff")
+        await renderBuffer()
 
         await sleep(500)
 

@@ -1,10 +1,11 @@
 import bodyParser from "body-parser"
 import express, { Application, Request, Response } from "express"
+import { getRunning, setRunning, startLoop } from "./colorLoop"
 import environment from "./environment"
 import { setup } from "./functions/ledCommands"
-import { connect } from "./ws2812srvConnection"
-import { startLoop, setRunning, getRunning } from "./colorLoop"
 import { Preset } from "./types/Preset"
+import { connect } from "./ws2812srvConnection"
+import convertColorToString from "./functions/convertColor"
 
 const app: Application = express()
 
@@ -30,7 +31,7 @@ async function init() {
 
     app.post("/set", (req: Request, res: Response) => {
         const preset = req.body as Preset
-        
+
         res.status(200).send({ message: "ok" })
     })
 
