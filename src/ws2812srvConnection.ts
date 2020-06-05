@@ -23,6 +23,7 @@ function connect(port: number, host: string) {
                 client = null
                 reject(err)
             })
+
             client.on("timeout", () => {
                 client = null
                 reject("timeout")

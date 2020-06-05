@@ -1,11 +1,11 @@
 import bodyParser from "body-parser"
 import express, { Application, Request, Response } from "express"
-import { getRunning, setRunning, startLoop } from "./colorLoop"
 import environment from "./environment"
 import { setup } from "./functions/ledCommands"
+import smoothMovement from "./rendering/smoothMovement"
+import { getRunning, setRenderFunction, setRunning, startLoop } from "./renderLoop"
 import { Preset } from "./types/Preset"
 import { connect } from "./ws2812srvConnection"
-import convertColorToString from "./functions/convertColor"
 
 const app: Application = express()
 
@@ -14,6 +14,8 @@ async function init() {
         await connect(environment.LED_PORT, environment.LED_HOST)
 
         setup(environment.LED_AMOUNT, environment.BRIGHTNESS)
+
+        setRenderFunction(smoothMovement)
 
         startLoop()
     } catch (err) {
