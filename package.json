@@ -6,7 +6,7 @@
   "scripts": {
     "dev-watch": "nodemon --watch 'src/' --ext 'ts' --exec npm run dev",
     "dev": "cross-env LED_HOST=\"192.168.0.212\" ts-node src/index.ts",
-    "start": "node dist/index.js",
+    "start": "cross-env LED_HOST=\"192.168.0.212\" node dist/index.js",
     "clean": "rimraf dist",
     "build": "tsc -p ."
   },

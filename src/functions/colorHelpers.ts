@@ -16,4 +16,16 @@ function multiply(a: Color, b: Color): Color {
     }
 }
 
-export { multiplyScalar, multiply }
+function add(a: Color, b: Color): Color {
+    return {
+        r: a.r + b.r,
+        g: a.g + b.g,
+        b: a.b + b.b
+    }
+}
+
+function lerp(a: Color, b: Color, t: number): Color {
+    return add(multiplyScalar(a, 1 - t), multiplyScalar(b, t))
+}
+
+export { multiplyScalar, multiply, add, lerp }

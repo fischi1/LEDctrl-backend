@@ -1,13 +1,46 @@
 import bodyParser from "body-parser"
 import express, { Application, Request, Response } from "express"
+import { BLUE, RED, WHITE } from "./constants/Colors"
 import environment from "./environment"
 import { setup } from "./functions/ledCommands"
-import smoothMovement from "./rendering/smoothMovement"
-import { getRunning, setRenderFunction, setRunning, startLoop } from "./renderLoop"
+import {
+    renderSimplePreset,
+    setPreset
+} from "./rendering/simplePresetRendering"
+import {
+    getRunning,
+    setRenderFunction,
+    setRunning,
+    startLoop
+} from "./renderLoop"
 import { Preset } from "./types/Preset"
+import { SimplePreset } from "./types/SimplePreset"
 import { connect } from "./ws2812srvConnection"
 
 const app: Application = express()
+
+const step = 1 / 3
+
+const simplePreset: SimplePreset = {
+    type: "simple",
+    breakpoints: [
+        {
+            brightness: 1,
+            color: WHITE,
+            position: 0
+        },
+        {
+            brightness: 1,
+            color: RED,
+            position: step * 2
+        },
+        {
+            brightness: 1,
+            color: WHITE,
+            position: step * 3
+        }
+    ]
+}
 
 async function init() {
     try {
@@ -15,7 +48,8 @@ async function init() {
 
         setup(environment.LED_AMOUNT, environment.BRIGHTNESS)
 
-        setRenderFunction(smoothMovement)
+        setPreset(simplePreset)
+        setRenderFunction(renderSimplePreset)
 
         startLoop()
     } catch (err) {
@@ -33,6 +67,8 @@ async function init() {
 
     app.post("/set", (req: Request, res: Response) => {
         const preset = req.body as Preset
+
+        console.log(preset)
 
         res.status(200).send({ message: "ok" })
     })

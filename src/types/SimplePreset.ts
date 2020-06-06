@@ -1,5 +1,7 @@
+import { Color } from "./Color"
+
 export type GradientBreakpoint = {
-    color: string
+    color: Color
     brightness: number
     /**
      * position on the gradient from 0 to 1
