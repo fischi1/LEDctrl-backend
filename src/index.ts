@@ -4,41 +4,15 @@ import { BLUE, GREEN, RED } from "./constants/Colors"
 import environment from "./environment"
 import { setup } from "./functions/ledCommands"
 import { randomColor } from "./functions/randomColor"
+import { getRunning, setRenderer, setRunning } from "./render"
 import breakpointsToColors from "./rendering/breakpointsToColors"
 import { colorArrayRenderer } from "./rendering/colorArrayRenderer"
 import smoothMovementRenderer from "./rendering/smoothMovement"
-import {
-    getRunning,
-    setRenderer,
-    setRunning,
-    startLoop
-} from "./render"
 import { Preset } from "./types/Preset"
 import { SimplePreset } from "./types/SimplePreset"
 import { connect } from "./ws2812srvConnection"
 
 const app: Application = express()
-
-const simplePreset: SimplePreset = {
-    type: "simple",
-    breakpoints: [
-        {
-            brightness: 1,
-            color: BLUE,
-            position: 0
-        },
-        {
-            brightness: 1,
-            color: RED,
-            position: 0.5
-        },
-        {
-            brightness: 1,
-            color: GREEN,
-            position: 1
-        }
-    ]
-}
 
 async function init() {
     try {
@@ -46,9 +20,8 @@ async function init() {
 
         setup(environment.LED_AMOUNT, environment.BRIGHTNESS)
 
-        setRenderer(smoothMovementRenderer(randomColor()))
-
-        startLoop()
+        // setRenderer(smoothMovementRenderer(randomColor()))
+        setRunning(true)
     } catch (err) {
         console.error(err)
         process.exit(1)
@@ -63,6 +36,27 @@ async function init() {
     })
 
     let toggle = true
+    
+    const simplePreset: SimplePreset = {
+        type: "simple",
+        breakpoints: [
+            {
+                brightness: 1,
+                color: BLUE,
+                position: 0
+            },
+            {
+                brightness: 1,
+                color: RED,
+                position: 0.5
+            },
+            {
+                brightness: 1,
+                color: GREEN,
+                position: 1
+            }
+        ]
+    }
 
     app.post("/set", (req: Request, res: Response) => {
         const preset = req.body as Preset

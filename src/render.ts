@@ -1,19 +1,28 @@
 import environment from "./environment"
-import { clear, renderBuffer } from "./functions/ledCommands"
+import { clear, clearAndFlush, renderBuffer } from "./functions/ledCommands"
 import sleep from "./functions/sleep"
 import { Renderer } from "./types/Rendering"
 import { Time } from "./types/Time"
 
-let running = true
+let running = false
 
 function setRunning(val: boolean) {
     running = val
-    if (running) startLoop()
+    if (running) {
+        rendering()
+    } else {
+        clearAndFlush()
+    }
 }
 
 const getRunning = () => running
 
-let renderer: Renderer | null = null
+const nullRenderer: Renderer = {
+    changing: false,
+    render: () => {}
+}
+
+let renderer: Renderer = nullRenderer
 
 function setRenderer(newRenderer: Renderer) {
     renderer = newRenderer
@@ -38,21 +47,29 @@ const calculateTime = (
     }
 }
 
-async function startLoop() {
+async function rendering() {
+    if (!renderer) return
+
     const startTime = process.hrtime()
     let lastTime = startTime
     while (running) {
+        console.log("render")
         const newTime = process.hrtime()
 
         clear()
-        if (renderer)
-            renderer.render(calculateTime(startTime, lastTime, newTime))
+
+        renderer.render(calculateTime(startTime, lastTime, newTime))
 
         await renderBuffer()
-        await sleep(environment.LOOP_INTERVAL_MS)
+
+        if (renderer.changing) {
+            await sleep(environment.LOOP_INTERVAL_MS)
+        } else {
+            await sleep(500)
+        }
 
         lastTime = newTime
     }
 }
 
-export { startLoop, setRunning, getRunning, setRenderer }
+export { setRunning, getRunning, setRenderer }
