@@ -28,4 +28,22 @@ const BLUE = {
     b: 1
 }
 
-export { WHITE, BLACK, RED, GREEN, BLUE }
+const YELLOW = {
+    r: 1,
+    g: 1,
+    b: 0
+}
+
+const PURPLE = {
+    r: 1,
+    g: 0,
+    b: 1
+}
+
+const CYAN = {
+    r: 0,
+    g: 1,
+    b: 1
+}
+
+export { WHITE, BLACK, RED, GREEN, BLUE, YELLOW, PURPLE, CYAN }

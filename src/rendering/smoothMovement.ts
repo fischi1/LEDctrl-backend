@@ -3,7 +3,7 @@ import { multiplyScalar } from "../functions/colorHelpers"
 import { setColorAtPos } from "../functions/ledCommands"
 import { randomColor } from "../functions/randomColor"
 import { Color } from "../types/Color"
-import { RenderFunction } from "../types/RenderFunction"
+import { RenderFunction } from "../types/Rendering"
 
 let timer = 0
 const transTime = 5

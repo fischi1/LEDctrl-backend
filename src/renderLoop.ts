@@ -1,7 +1,7 @@
 import environment from "./environment"
 import { clear, renderBuffer } from "./functions/ledCommands"
 import sleep from "./functions/sleep"
-import { RenderFunction } from "./types/RenderFunction"
+import { RenderFunction } from "./types/Rendering"
 import { Time } from "./types/Time"
 
 let running = true

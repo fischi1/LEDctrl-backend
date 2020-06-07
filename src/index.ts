@@ -1,6 +1,6 @@
 import bodyParser from "body-parser"
 import express, { Application, Request, Response } from "express"
-import { BLUE, RED, WHITE } from "./constants/Colors"
+import { PURPLE, RED, YELLOW } from "./constants/Colors"
 import environment from "./environment"
 import { setup } from "./functions/ledCommands"
 import {
@@ -26,7 +26,7 @@ const simplePreset: SimplePreset = {
     breakpoints: [
         {
             brightness: 1,
-            color: WHITE,
+            color: YELLOW,
             position: 0
         },
         {
@@ -36,7 +36,7 @@ const simplePreset: SimplePreset = {
         },
         {
             brightness: 1,
-            color: WHITE,
+            color: PURPLE,
             position: step * 3
         }
     ]
