@@ -5,6 +5,10 @@ import { Color } from "../types/Color"
 import { GradientBreakpoint } from "../types/SimplePreset"
 
 function breakpointsToColors(breakpointArray: GradientBreakpoint[]): Color[] {
+    console.log(
+        "generating colors from an array of breakpoints",
+        breakpointArray
+    )
     const breakpoints = deepCopy(breakpointArray)
 
     if (breakpoints.length > 0) {
@@ -19,7 +23,6 @@ function breakpointsToColors(breakpointArray: GradientBreakpoint[]): Color[] {
         })
 
         const colors = determineColorGradient(breakpoints)
-        colors.forEach((c, i) => console.log(i, c))
         return colors
     } else {
         console.error("no breakpoints set for this simple preset")
@@ -32,20 +35,15 @@ function determineColorGradient(breakpoints: GradientBreakpoint[]) {
     for (let i = 0; i < environment.LED_AMOUNT; i++) {
         const relativePos = i / (environment.LED_AMOUNT - 1)
 
-        console.log(`${i}: ${relativePos}`)
         const foundBreakpoints = findBreakpoints(relativePos, breakpoints)
-        console.log(foundBreakpoints)
         if (foundBreakpoints.length === 2) {
             const color = calcColor(
                 foundBreakpoints[0],
                 foundBreakpoints[1],
                 relativePos
             )
-            console.log(color)
             colors[i] = color
         }
-        console.log()
-        console.log()
     }
     return colors
 }
@@ -75,7 +73,7 @@ function calcColor(
         0.0000000001
     )
     const t = (pos - breakpointA.position) / denominator
-    console.log("t: " + t)
+
     return lerp(
         multiplyScalar(breakpointA.color, breakpointA.brightness),
         multiplyScalar(breakpointB.color, breakpointB.brightness),

@@ -1,6 +1,6 @@
 import bodyParser from "body-parser"
 import express, { Application, Request, Response } from "express"
-import { PURPLE, RED, YELLOW } from "./constants/Colors"
+import { CYAN, PURPLE, YELLOW } from "./constants/Colors"
 import environment from "./environment"
 import { setup } from "./functions/ledCommands"
 import {
@@ -19,25 +19,23 @@ import { connect } from "./ws2812srvConnection"
 
 const app: Application = express()
 
-const step = 1 / 3
-
 const simplePreset: SimplePreset = {
     type: "simple",
     breakpoints: [
         {
             brightness: 1,
-            color: YELLOW,
+            color: CYAN,
             position: 0
         },
         {
             brightness: 1,
-            color: RED,
-            position: step * 2
+            color: PURPLE,
+            position: 0.5
         },
         {
             brightness: 1,
-            color: PURPLE,
-            position: step * 3
+            color: YELLOW,
+            position: 1
         }
     ]
 }
