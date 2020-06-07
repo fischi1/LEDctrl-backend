@@ -1,7 +1,7 @@
 import environment from "./environment"
 import { clear, renderBuffer } from "./functions/ledCommands"
 import sleep from "./functions/sleep"
-import { RenderFunction } from "./types/Rendering"
+import { Renderer } from "./types/Rendering"
 import { Time } from "./types/Time"
 
 let running = true
@@ -13,10 +13,10 @@ function setRunning(val: boolean) {
 
 const getRunning = () => running
 
-let renderFunction: RenderFunction | null = null
+let renderer: Renderer | null = null
 
-function setRenderFunction(rf: RenderFunction) {
-    renderFunction = rf
+function setRenderer(newRenderer: Renderer) {
+    renderer = newRenderer
 }
 
 const diffTime = (a: number[], b: number[]): number[] => {
@@ -45,8 +45,8 @@ async function startLoop() {
         const newTime = process.hrtime()
 
         clear()
-        if (renderFunction)
-            renderFunction(calculateTime(startTime, lastTime, newTime))
+        if (renderer)
+            renderer.render(calculateTime(startTime, lastTime, newTime))
 
         await renderBuffer()
         await sleep(environment.LOOP_INTERVAL_MS)
@@ -55,4 +55,4 @@ async function startLoop() {
     }
 }
 
-export { startLoop, setRunning, getRunning, setRenderFunction }
+export { startLoop, setRunning, getRunning, setRenderer }

@@ -1,18 +1,18 @@
 import bodyParser from "body-parser"
 import express, { Application, Request, Response } from "express"
-import { CYAN, PURPLE, YELLOW } from "./constants/Colors"
+import { BLUE, GREEN, RED } from "./constants/Colors"
 import environment from "./environment"
 import { setup } from "./functions/ledCommands"
-import {
-    renderSimplePreset,
-    setPreset
-} from "./rendering/simplePresetRendering"
+import { randomColor } from "./functions/randomColor"
+import breakpointsToColors from "./rendering/breakpointsToColors"
+import { colorArrayRenderer } from "./rendering/colorArrayRenderer"
+import smoothMovementRenderer from "./rendering/smoothMovement"
 import {
     getRunning,
-    setRenderFunction,
+    setRenderer,
     setRunning,
     startLoop
-} from "./renderLoop"
+} from "./render"
 import { Preset } from "./types/Preset"
 import { SimplePreset } from "./types/SimplePreset"
 import { connect } from "./ws2812srvConnection"
@@ -24,17 +24,17 @@ const simplePreset: SimplePreset = {
     breakpoints: [
         {
             brightness: 1,
-            color: CYAN,
+            color: BLUE,
             position: 0
         },
         {
             brightness: 1,
-            color: PURPLE,
+            color: RED,
             position: 0.5
         },
         {
             brightness: 1,
-            color: YELLOW,
+            color: GREEN,
             position: 1
         }
     ]
@@ -46,8 +46,7 @@ async function init() {
 
         setup(environment.LED_AMOUNT, environment.BRIGHTNESS)
 
-        setPreset(simplePreset)
-        setRenderFunction(renderSimplePreset)
+        setRenderer(smoothMovementRenderer(randomColor()))
 
         startLoop()
     } catch (err) {
@@ -63,10 +62,24 @@ async function init() {
         res.status(200).send({ running: getRunning() })
     })
 
+    let toggle = true
+
     app.post("/set", (req: Request, res: Response) => {
         const preset = req.body as Preset
 
         console.log(preset)
+
+        if (toggle) {
+            setRenderer(
+                colorArrayRenderer(
+                    breakpointsToColors(simplePreset.breakpoints)
+                )
+            )
+        } else {
+            setRenderer(smoothMovementRenderer(randomColor()))
+        }
+
+        toggle = !toggle
 
         res.status(200).send({ message: "ok" })
     })
