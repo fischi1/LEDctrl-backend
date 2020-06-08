@@ -6,11 +6,20 @@ import { Time } from "./types/Time"
 
 let running = false
 
+let timeout: NodeJS.Timeout | undefined
+let rendererCounter = 0
+
+function stopCurrentRenderer() {
+    if (timeout) clearTimeout(timeout)
+    timeout = undefined
+}
+
 function setRunning(val: boolean) {
     running = val
     if (running) {
-        rendering()
+        rendering(++rendererCounter)
     } else {
+        stopCurrentRenderer()
         clearAndFlush()
     }
 }
@@ -26,6 +35,8 @@ let renderer: Renderer = nullRenderer
 
 function setRenderer(newRenderer: Renderer) {
     renderer = newRenderer
+    stopCurrentRenderer()
+    if (running) rendering(++rendererCounter)
 }
 
 const diffTime = (a: number[], b: number[]): number[] => {
@@ -47,29 +58,40 @@ const calculateTime = (
     }
 }
 
-async function rendering() {
+function rendering(count: number) {
     if (!renderer) return
+
+    const localRenderer = renderer
 
     const startTime = process.hrtime()
     let lastTime = startTime
-    while (running) {
-        console.log("render")
+    const rendererCount = count
+
+    const renderLoop = async () => {
+        if (rendererCount !== rendererCounter) return
+
+        console.log("render " + rendererCount)
         const newTime = process.hrtime()
 
         clear()
 
-        renderer.render(calculateTime(startTime, lastTime, newTime))
+        localRenderer.render(calculateTime(startTime, lastTime, newTime))
 
         await renderBuffer()
 
-        if (renderer.changing) {
-            await sleep(environment.LOOP_INTERVAL_MS)
+        if (localRenderer.changing) {
+            timeout = setTimeout(() => {
+                lastTime = newTime
+                renderLoop()
+            }, environment.LOOP_INTERVAL_MS)
         } else {
-            await sleep(500)
+            timeout = setTimeout(() => {
+                lastTime = newTime
+                renderLoop()
+            }, 2000)
         }
-
-        lastTime = newTime
     }
+    renderLoop()
 }
 
 export { setRunning, getRunning, setRenderer }
