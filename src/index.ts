@@ -1,11 +1,9 @@
 import bodyParser from "body-parser"
 import cors from "cors"
 import express, { Application, Request, Response } from "express"
-import { RED, CYAN } from "./constants/Colors"
 import environment from "./environment"
 import { setup } from "./functions/ledCommands"
 import { getRunning, setRenderer, setRunning } from "./render"
-import pingPongRenderer from "./rendering/pingPongRenderer"
 import presetToRenderer from "./rendering/presetToRenderer"
 import { Preset } from "./types/Preset"
 import { connect } from "./ws2812srvConnection"
@@ -17,6 +15,7 @@ async function init() {
         await connect(environment.LED_PORT, environment.LED_HOST)
 
         setup(environment.LED_AMOUNT, environment.BRIGHTNESS)
+
         setRunning(true)
     } catch (err) {
         console.error(err)
