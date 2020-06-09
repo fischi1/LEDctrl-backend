@@ -1,3 +1,4 @@
+import { WHITE } from "../constants/Colors"
 import environment from "../environment"
 import { multiplyScalar } from "../functions/colorHelpers"
 import { setColorAtPos } from "../functions/ledCommands"
@@ -12,9 +13,16 @@ function normFunc(val: number, maxDistance: number): number {
     return Math.pow(relativeDistance, 5)
 }
 
-function smoothMovementRenderer(color: Color): Renderer {
+export type PingPongProps = {
+    color?: Color
+    transitionTime?: number
+    radius?: number
+}
+
+function pingPongRenderer(props: PingPongProps = {}): Renderer {
+    const { color = WHITE, transitionTime = 5, radius = 15 } = props
+
     let timer = 0
-    const transTime = 5
 
     let up = true
 
@@ -23,20 +31,20 @@ function smoothMovementRenderer(color: Color): Renderer {
         render: (time) => {
             timer += time.deltaTime
 
-            if (timer > transTime) {
+            if (timer > transitionTime) {
                 timer = 0
                 up = !up
             }
 
             const pos =
-                (up ? timer / transTime : 1 - timer / transTime) *
+                (up ? timer / transitionTime : 1 - timer / transitionTime) *
                 environment.LED_AMOUNT
 
             for (let i = 0; i < environment.LED_AMOUNT; i++) {
                 const relativeDistance = Math.abs(i - pos)
 
                 setColorAtPos(
-                    multiplyScalar(color, normFunc(relativeDistance, 15)),
+                    multiplyScalar(color, normFunc(relativeDistance, radius)),
                     i
                 )
             }
@@ -44,4 +52,4 @@ function smoothMovementRenderer(color: Color): Renderer {
     }
 }
 
-export default smoothMovementRenderer
+export default pingPongRenderer

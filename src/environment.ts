@@ -1,5 +1,8 @@
 const environment = {
-    BRIGHTNESS: process.env.BRIGHTNESS ? +process.env.BRIGHTNESS : 20,
+    /**
+     * max 255
+     */
+    BRIGHTNESS: process.env.BRIGHTNESS ? +process.env.BRIGHTNESS : 10,
     LED_HOST: process.env.LED_HOST ?? "localhost",
     LED_PORT: process.env.LED_PORT ? +process.env.LED_PORT : 9999,
     PORT: process.env.PORT ?? 3000,
