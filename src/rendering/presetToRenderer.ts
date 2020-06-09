@@ -1,9 +1,10 @@
+import { EffectPreset } from "../types/EffectPreset"
 import { Preset } from "../types/Preset"
-import { Renderer, RenderFunction } from "../types/Rendering"
+import { Renderer } from "../types/Rendering"
 import breakpointsToColors from "./breakpointsToColors"
 import { colorArrayRenderer } from "./colorArrayRenderer"
-import { EffectPreset } from "../types/EffectPreset"
 import pingPongRenderer from "./pingPongRenderer"
+import rainbowRenderer from "./rainbowRenderer"
 import stroboscopeRenderer from "./stroboscopeRenderer"
 
 const nullRenderer = {
@@ -19,6 +20,8 @@ function effectPresetToRenderer(preset: EffectPreset): Renderer {
             return pingPongRenderer(effect.props)
         case "stroboscope":
             return stroboscopeRenderer(effect.props)
+        case "rainbow":
+            return rainbowRenderer(effect.props)
         default:
             return nullRenderer
     }
