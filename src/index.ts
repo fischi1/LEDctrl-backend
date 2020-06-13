@@ -31,6 +31,18 @@ async function init() {
         res.status(200).send({ running: getRunning() })
     })
 
+    app.post("/toggleOn", (req, res) => {
+        setRunning(true)
+
+        res.status(200).send({ running: getRunning() })
+    })
+
+    app.post("/toggleOff", (req, res) => {
+        setRunning(false)
+
+        res.status(200).send({ running: getRunning() })
+    })
+
     app.post("/set", (req: Request, res: Response) => {
         const preset = req.body as Preset
 

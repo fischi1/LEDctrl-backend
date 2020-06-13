@@ -1,5 +1,5 @@
 import environment from "../environment"
-import { lerp, multiplyScalar } from "../functions/colorHelpers"
+import { lerp } from "../functions/colorHelpers"
 import deepCopy from "../functions/deepCopy"
 import { Color } from "../types/Color"
 import { GradientBreakpoint } from "../types/SimplePreset"
@@ -74,11 +74,7 @@ function calcColor(
     )
     const t = (pos - breakpointA.position) / denominator
 
-    return lerp(
-        multiplyScalar(breakpointA.color, breakpointA.brightness),
-        multiplyScalar(breakpointB.color, breakpointB.brightness),
-        t
-    )
+    return lerp(breakpointA.color, breakpointB.color, t)
 }
 
 export default breakpointsToColors
