@@ -7,6 +7,7 @@ import { getRunning, setRenderer, setRunning } from "./render"
 import presetToRenderer from "./rendering/presetToRenderer"
 import { Preset } from "./types/Preset"
 import { connect } from "./ws2812srvConnection"
+import { consoleLog } from "./functions/console"
 
 const app: Application = express()
 
@@ -46,7 +47,7 @@ async function init() {
     app.post("/set", (req: Request, res: Response) => {
         const preset = req.body as Preset
 
-        console.log(preset)
+        consoleLog(preset)
 
         setRenderer(presetToRenderer(preset))
 

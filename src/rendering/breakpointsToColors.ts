@@ -1,14 +1,13 @@
 import environment from "../environment"
 import { lerp } from "../functions/colorHelpers"
+import { consoleLog } from "../functions/console"
 import deepCopy from "../functions/deepCopy"
 import { Color } from "../types/Color"
 import { GradientBreakpoint } from "../types/SimplePreset"
 
 function breakpointsToColors(breakpointArray: GradientBreakpoint[]): Color[] {
-    console.log(
-        "generating colors from an array of breakpoints",
-        breakpointArray
-    )
+    consoleLog("generating colors from an array of breakpoints")
+    consoleLog(breakpointArray)
     const breakpoints = deepCopy(breakpointArray)
 
     if (breakpoints.length > 0) {

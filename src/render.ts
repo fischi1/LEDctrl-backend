@@ -1,4 +1,5 @@
 import environment from "./environment"
+import { consoleLog } from "./functions/console"
 import { clear, clearAndFlush, renderBuffer } from "./functions/ledCommands"
 import { Renderer } from "./types/Rendering"
 import { Time } from "./types/Time"
@@ -69,7 +70,7 @@ function rendering(count: number) {
     const renderLoop = async () => {
         if (rendererCount !== rendererCounter) return
 
-        console.log("render " + rendererCount)
+        consoleLog("render " + rendererCount)
         const newTime = process.hrtime()
 
         clear()
@@ -94,4 +95,3 @@ function rendering(count: number) {
 }
 
 export { setRunning, getRunning, setRenderer }
-
