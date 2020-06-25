@@ -2,12 +2,12 @@ import bodyParser from "body-parser"
 import cors from "cors"
 import express, { Application, Request, Response } from "express"
 import environment from "./environment"
+import { consoleLog } from "./functions/console"
 import { setup } from "./functions/ledCommands"
 import { getRunning, setRenderer, setRunning } from "./render"
 import presetToRenderer from "./rendering/presetToRenderer"
 import { Preset } from "./types/Preset"
 import { connect } from "./ws2812srvConnection"
-import { consoleLog } from "./functions/console"
 
 const app: Application = express()
 
@@ -36,6 +36,10 @@ async function init() {
         setRunning(true)
 
         res.status(200).send({ running: getRunning() })
+    })
+
+    app.get("/toggle", (req, res) => {
+        res.status(200).send(getRunning())
     })
 
     app.post("/toggleOff", (req, res) => {
