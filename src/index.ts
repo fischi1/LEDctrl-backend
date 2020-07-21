@@ -8,16 +8,24 @@ import { getRunning, setRenderer, setRunning } from "./render"
 import presetToRenderer from "./rendering/presetToRenderer"
 import { Preset } from "./types/Preset"
 import { connect } from "./ws2812srvConnection"
+import {
+    setupDirectory,
+    savePreset,
+    retrieveLastPresetIfSet
+} from "./presetStorage"
 
 const app: Application = express()
 
 async function init() {
     try {
+        setupDirectory()
+        const preset = retrieveLastPresetIfSet()
         await connect(environment.LED_PORT, environment.LED_HOST)
 
         setup(environment.LED_AMOUNT, environment.BRIGHTNESS)
 
         setRunning(true)
+        if (preset) setRenderer(presetToRenderer(preset))
     } catch (err) {
         console.error(err)
         process.exit(1)
@@ -54,6 +62,8 @@ async function init() {
         consoleLog(preset)
 
         setRenderer(presetToRenderer(preset))
+
+        savePreset(preset)
 
         res.status(200).send({ message: "ok" })
     })

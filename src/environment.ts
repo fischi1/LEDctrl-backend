@@ -13,7 +13,8 @@ const environment = {
     COLOR_LOOP_WIDTH: process.env.COLOR_LOOP_WIDTH
         ? +process.env.COLOR_LOOP_WIDTH
         : 20,
-    DEBUG: process.env.DEBUG === "true" ? true : false
+    DEBUG: process.env.DEBUG === "true" ? true : false,
+    DATA_DIR: process.env.DATA_DIR ?? "/var/lib/ledbackend"
 }
 
 export default environment
