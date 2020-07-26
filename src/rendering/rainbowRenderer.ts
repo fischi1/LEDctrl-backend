@@ -11,10 +11,12 @@ import environment from "../environment"
 import { setColorAtPos } from "../functions/ledCommands"
 import { Color } from "../types/Color"
 import { Renderer } from "../types/Rendering"
+import { multiplyScalar } from "../functions/colorHelpers"
 
 export type RainbowProps = {
     width?: number
     ledsPerSecond?: number
+    brightness?: number
 }
 
 function calcForPos(
@@ -44,13 +46,19 @@ function calcForPos(
 }
 
 function rainbowRenderer(props: RainbowProps = {}): Renderer {
-    const { width = 30, ledsPerSecond = 2 } = props
+    const { width = 30, ledsPerSecond = 2, brightness = 1 } = props
 
     return {
         changing: true,
         render: (time) => {
             for (let i = 0; i < environment.LED_AMOUNT; i++) {
-                setColorAtPos(calcForPos(i, time.time, width, ledsPerSecond), i)
+                setColorAtPos(
+                    multiplyScalar(
+                        calcForPos(i, time.time, width, ledsPerSecond),
+                        brightness
+                    ),
+                    i
+                )
             }
         }
     }
